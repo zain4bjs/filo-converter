@@ -1,0 +1,14 @@
+fastapi==0.115.6
+python-multipart==0.0.20
+uvicorn[standard]==0.34.0
+pdfplumber==0.11.10
+openpyxl==3.1.5
+python-pptx==1.0.2
+
+# The merged image installs this file into the SAME interpreter as
+# pdf_to_doc_converter, so these two pins MUST match that app's — pip would
+# otherwise silently upgrade them and alter its layout reconstruction.
+# Verified: every endpoint here produces identical output on PyMuPDF 1.27.2.3.
+PyMuPDF==1.27.2.3
+Pillow==12.2.0
+pytesseract==0.3.13

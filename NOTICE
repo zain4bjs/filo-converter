@@ -1,0 +1,61 @@
+Filo conversion engine
+Copyright (C) 2026 Filo (filodocs.app)
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License version 3 as published by
+the Free Software Foundation (see LICENSE). It is distributed WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.
+
+Source of the conversion engine behind Filo, https://filodocs.app. Questions:
+support@filodocs.app.
+
+-------------------------------------------------------------------------------
+Included code under other licenses
+-------------------------------------------------------------------------------
+
+pdf_to_doc_converter/
+  Derived from "PDF-Converter" by Suleyman Bozkurt, MIT License,
+  Copyright (c) 2023 Suleyman Bozkurt. The original notice is kept verbatim in
+  pdf_to_doc_converter/LICENSE and continues to apply to that upstream code
+  (including its example files and desktop GUI images under files/).
+
+-------------------------------------------------------------------------------
+Major third-party components used at runtime (not vendored in this repo,
+installed from PyPI / Debian / The Document Foundation when the image is built)
+-------------------------------------------------------------------------------
+
+Python packages
+  PyMuPDF (fitz) ............ AGPL-3.0 (Artifex Software) -- the reason this
+                              repository is published under AGPL-3.0
+  pdf2docx .................. MIT
+  python-docx ............... MIT
+  docxcompose ............... MIT
+  pdf2image ................. MIT
+  pdfplumber ................ MIT
+  openpyxl .................. MIT
+  python-pptx ............... MIT
+  pytesseract ............... Apache-2.0
+  ocrmypdf .................. MPL-2.0
+  numpy ..................... BSD-3-Clause
+  opencv-python-headless .... Apache-2.0 (bundled FFmpeg et al. under their
+                              own licenses)
+  Pillow .................... MIT-CMU (HPND)
+  Flask ..................... BSD-3-Clause
+  gunicorn .................. MIT
+  FastAPI ................... MIT
+  Starlette ................. BSD-3-Clause
+  uvicorn ................... BSD-3-Clause
+  python-multipart .......... Apache-2.0
+
+LibreOffice (The Document Foundation build, /opt/libreoffice*) ... MPL-2.0
+
+System packages (Debian bookworm)
+  Tesseract OCR + language data ... Apache-2.0
+  Poppler (poppler-utils) ... GPL-2.0-or-later
+  Ghostscript ............... AGPL-3.0
+  Fonts: Noto, Liberation, Carlito, Caladea (SIL OFL-1.1); DejaVu (Bitstream
+  Vera license); GNU FreeFont (GPL-3.0 with font exception)
+
+Each component remains under its own license; see the respective upstream
+projects (and /usr/share/doc/*/copyright inside the image) for full terms.

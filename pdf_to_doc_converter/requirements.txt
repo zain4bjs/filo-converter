@@ -1,0 +1,29 @@
+# Versions are pinned to EXACTLY match the local development venv so the
+# deployed container reconstructs identical layout. pdf2docx, PyMuPDF and
+# python-docx drive page/table/font-metric reconstruction; any version drift
+# between local and deploy silently changes alignment and image placement.
+# When you upgrade locally, re-run `pip freeze` and update these pins together.
+Flask==3.1.3
+gunicorn>=22,<24  # server-only (not installed locally); WSGI runner
+
+# Core document conversion stack used by pdf_to_doc_converter/main.py.
+pdf2docx==0.5.13
+python-docx==1.2.0
+pdf2image==1.17.0
+PyMuPDF==1.27.2.3
+Pillow==12.2.0
+numpy==2.5.0
+opencv-python-headless==4.13.0.92
+pytesseract==0.3.13
+
+# Optional enhancers for scanned / mixed-text PDFs. Not installed in the local
+# venv, so the code degrades gracefully when they are absent; pinned here so the
+# server behaves reproducibly when they ARE present.
+docxcompose==1.4.1
+ocrmypdf>=15,<18
+
+# Deployment note:
+# - pdf2image requires Poppler (`pdftoppm` / `pdfinfo`) on the image or host.
+# - pytesseract requires the Tesseract binary on PATH.
+# - ocrmypdf also needs Ghostscript available in the runtime environment.
+# These are OS-level packages and cannot be installed via pip here.

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hardened LibreOffice user settings for the converter.
+
+  main.py copies this file to <profile>/user/registrymodifications.xcu before
+  LibreOffice first starts against a profile (the shared template and the
+  per-request fallback), and verifies the values survive LibreOffice's rewrite
+  on exit. Every conversion therefore runs with these settings.
+
+  Uploaded documents are untrusted. These keys stop them from running code or
+  making the server fetch remote content (SSRF) while being converted. Key
+  names, types and enumeration values come from the officecfg schema in the
+  LibreOffice source tree (first written against the libreoffice-7-4 branch;
+  re-checked against the TDF 26.8 build the image now installs, where every
+  key below exists):
+    officecfg/registry/schema/org/openoffice/Office/Common.xcs
+    officecfg/registry/schema/org/openoffice/Office/Calc.xcs
+    officecfg/registry/schema/org/openoffice/Office/Writer.xcs
+  https://git.libreoffice.org/core/+/refs/heads/libreoffice-7-4/officecfg/registry/schema/org/openoffice/Office/
+
+  Removed with the move to LibreOffice 26.8:
+    Java.xcs VirtualMachine/Enable=false. The key no longer exists, so
+    LibreOffice drops it when it rewrites this file, which made main.py's
+    "settings survived" check fail and re-seed the profile template on every
+    start. The image ships no Java runtime, so no JVM can start anyway.
+
+  Not set on purpose:
+    Common/Security/Scripting/DisableActiveContent (OLE + DDE off) exists from
+    LibreOffice 24.x, so it is available now, but turning embedded OLE objects
+    off could change how existing decks render (charts and formulas embedded
+    as OLE), which this service must not do.
+-->
+<oor:items xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!-- Common.xcs, Security/Scripting/MacroSecurityLevel (xs:int, 0-3, default 2):
+     3 = "very high", only macros from trusted file locations; none are configured. -->
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="MacroSecurityLevel" oor:op="fuse"><value>3</value></prop></item>
+<!-- Common.xcs, Security/Scripting/DisableMacrosExecution (xs:boolean, default false):
+     disables Basic, BeanShell, JavaScript and Python macros outright; MacroSecurityLevel is then ignored. -->
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="DisableMacrosExecution" oor:op="fuse"><value>true</value></prop></item>
+<!-- Common.xcs, Security/Scripting/BlockUntrustedRefererLinks (xs:boolean, default false):
+     blocks links (e.g. linked images) originating from documents outside the trusted locations. -->
+<item oor:path="/org.openoffice.Office.Common/Security/Scripting"><prop oor:name="BlockUntrustedRefererLinks" oor:op="fuse"><value>true</value></prop></item>
+<!-- Calc.xcs, Content/Update/Link (xs:int, default 2): 0 = always, 1 = never, 2 = on request. -->
+<item oor:path="/org.openoffice.Office.Calc/Content/Update"><prop oor:name="Link" oor:op="fuse"><value>1</value></prop></item>
+<!-- Writer.xcs, Content/Update/Link (xs:int, default 1). CAUTION: the schema's own description
+     ("0 = always, 1 = on request, 2 = never") is WRONG. Writer stores this value unchanged as its
+     link-update mode (sw/source/uibase/config/usrpref.cxx, SwContentViewConfig::Load ->
+     SetUpdateLinkMode(nSet)), and that mode uses sw/inc/linkenum.hxx numbering:
+     0 = NEVER, 1 = MANUAL (on request), 2 = AUTOMATIC, 3 = GLOBALSETTING. So never = 0. -->
+<item oor:path="/org.openoffice.Office.Writer/Content/Update"><prop oor:name="Link" oor:op="fuse"><value>0</value></prop></item>
+<!-- Calc.xcs, Formula/Load/OOXMLRecalcMode and ODFRecalcMode (xs:int, default 1):
+     1 = never recalculate on load, so cached results are printed and functions such as
+     WEBSERVICE() are never evaluated. Same as the default; pinned so it cannot drift. -->
+<item oor:path="/org.openoffice.Office.Calc/Formula/Load"><prop oor:name="OOXMLRecalcMode" oor:op="fuse"><value>1</value></prop></item>
+<item oor:path="/org.openoffice.Office.Calc/Formula/Load"><prop oor:name="ODFRecalcMode" oor:op="fuse"><value>1</value></prop></item>
+</oor:items>

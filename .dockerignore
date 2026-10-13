@@ -1,0 +1,14 @@
+**/.git
+**/.venv
+**/.idea
+**/.DS_Store
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+*.docx
+pdf_to_doc_converter/files/poppler-*
+pdf_to_doc_converter/files/Tesseract-OCR
+watermark/tests
+deadline/tests
+pdf_to_doc_converter/tests
+ppt_to_pdf_converter/tests
